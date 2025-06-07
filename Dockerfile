@@ -19,8 +19,8 @@ RUN ./mvnw dependency:go-offline -B
 # 소스 코드 복사
 COPY src src
 
-# 애플리케이션 빌드 (테스트 스킵하여 빌드 시간 단축)
-RUN ./mvnw clean package -DskipTests
+# 애플리케이션 빌드 (병렬 빌드로 속도 향상)
+RUN ./mvnw clean package -DskipTests -T 1C
 
 # 실행 스테이지: 더 가벼운 JRE 이미지 사용
 FROM eclipse-temurin:17-jre

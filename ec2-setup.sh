@@ -58,8 +58,11 @@ sudo ufw allow 80
 sudo ufw allow 443
 sudo ufw allow 3306
 
-# Git 설치 (소스코드 클론을 위해)
-sudo apt install -y git
+# Git과 Java 설치
+sudo apt install -y git openjdk-17-jdk
+
+# Maven 설치 (선택사항)
+sudo apt install -y maven
 
 echo "✅ EC2 서버 기본 설정 완료!"
 echo ""
