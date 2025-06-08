@@ -19,7 +19,7 @@ sudo certbot certonly --standalone \
   --preferred-challenges http \
   --agree-tos \
   --no-eff-email \
-  --email your-email@example.com \
+  --email gyn6266@gmail.com \
   -d $DOMAIN
 
 # SSL 인증서를 Docker 볼륨으로 복사

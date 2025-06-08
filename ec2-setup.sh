@@ -30,32 +30,20 @@ sudo usermod -aG docker $USER
 echo "🔐 Certbot 설치 중..."
 sudo apt install -y certbot
 
-# 방화벽 설정 (필요한 포트 열기)
+# 방화벽 설정 (HTTP/HTTPS 포트만)
 echo "🔥 방화벽 설정 중..."
-sudo ufw enable
-sudo ufw allow ssh
 sudo ufw allow 80
 sudo ufw allow 443
 
 # Git 설치
 sudo apt install -y git
 
-# SSL 디렉토리 생성
-sudo mkdir -p /etc/letsencrypt/live/yonsei-sketch.kro.kr
-sudo mkdir -p ./ssl/live/yonsei-sketch.kro.kr
-sudo mkdir -p ./nginx/html
-
 echo "✅ EC2 서버 기본 설정 완료!"
 echo ""
 echo "📋 다음 단계:"
 echo "1. 프로젝트 소스코드를 클론: git clone [repo-url]"
 echo "2. 프로젝트 디렉토리로 이동: cd backend"
-echo "3. SSL 인증서 발급: sudo certbot certonly --standalone -d yonsei-sketch.kro.kr"
-echo "4. SSL 인증서를 Docker 볼륨 위치로 복사:"
-echo "   sudo cp -r /etc/letsencrypt/* ./ssl/"
-echo "   sudo chmod -R 755 ./ssl"
-echo "5. Docker Compose로 애플리케이션 시작: docker-compose up -d --build"
-echo "6. 테스트: curl https://yonsei-sketch.kro.kr/api"
+echo "3. SSL 설정 및 애플리케이션 시작: ./ssl-setup.sh"
 echo ""
 echo "🔧 H2 데이터베이스 정보:"
 echo "  - 타입: 인메모리 데이터베이스"
