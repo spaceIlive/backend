@@ -55,9 +55,10 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- H2 인메모리 데이터베이스 -->
 		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>

@@ -4,18 +4,22 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/sketch_app?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: admin
-    password: '1234'
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:sketch_app;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.H2Dialect
   security:
     user:
       name: admin
@@ -33,9 +37,9 @@ logging:
             sql:
               BasicBinder: TRACE
 
-# CORS 설정 (환경변수 사용)
+# CORS 설정 (로컬 서버 + 외부 접속용)
 cors:
-  allowed-origins: ${ALLOWED_ORIGINS:*}
+  allowed-origins: ${ALLOWED_ORIGINS:https://yonsei-sketch.kro.kr,http://yonsei-sketch.kro.kr,http://localhost:3001,http://192.168.50.78:3001}
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: "*"
   allow-credentials: true

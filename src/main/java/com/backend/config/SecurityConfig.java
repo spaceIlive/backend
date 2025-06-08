@@ -17,7 +17,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${cors.allowed-origins:https://yonsei-sketch.kro.kr,http://localhost:3001}")
+    @Value("${cors.allowed-origins:https://yonsei-sketch.kro.kr,http://yonsei-sketch.kro.kr,http://localhost:3001}")
     private String allowedOrigins;
 
     @Bean

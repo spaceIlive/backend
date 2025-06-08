@@ -16,39 +16,19 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io
 
 # Docker Compose 설치
 echo "🔧 Docker Compose 설치 중..."
-sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-# Docker 서비스 시작 및 사용자 권한 설정
+# Docker 서비스 시작 및 자동 시작 설정
 sudo systemctl start docker
 sudo systemctl enable docker
+
+# 현재 사용자를 docker 그룹에 추가
 sudo usermod -aG docker $USER
 
-# MySQL 서버 설치
-echo "🗄️ MySQL 서버 설치 중..."
-sudo apt install -y mysql-server
-
-# MySQL 서비스 시작
-sudo systemctl start mysql
-sudo systemctl enable mysql
-
-# MySQL 보안 설정 및 데이터베이스 생성
-echo "🔐 MySQL 데이터베이스 설정 중..."
-sudo mysql -e "
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
-FLUSH PRIVILEGES;
-CREATE DATABASE IF NOT EXISTS sketch_app;
-CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY '1234';
-CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY '1234';
-GRANT ALL PRIVILEGES ON sketch_app.* TO 'admin'@'localhost';
-GRANT ALL PRIVILEGES ON sketch_app.* TO 'admin'@'%';
-FLUSH PRIVILEGES;
-"
-
-# MySQL 외부 접속 허용 설정
-echo "🌐 MySQL 외부 접속 설정 중..."
-sudo sed -i 's/bind-address.*= 127.0.0.1/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
-sudo systemctl restart mysql
+# Certbot 설치 (SSL 인증서용)
+echo "🔐 Certbot 설치 중..."
+sudo apt install -y certbot
 
 # 방화벽 설정 (필요한 포트 열기)
 echo "🔥 방화벽 설정 중..."
@@ -56,26 +36,34 @@ sudo ufw enable
 sudo ufw allow ssh
 sudo ufw allow 80
 sudo ufw allow 443
-sudo ufw allow 3306
 
-# Git과 Java 설치
-sudo apt install -y git openjdk-17-jdk
+# Git 설치
+sudo apt install -y git
 
-# Maven 설치 (선택사항)
-sudo apt install -y maven
-
+# SSL 디렉토리 생성
+sudo mkdir -p /etc/letsencrypt/live/yonsei-sketch.kro.kr
+sudo mkdir -p ./ssl/live/yonsei-sketch.kro.kr
+sudo mkdir -p ./nginx/html
 
 echo "✅ EC2 서버 기본 설정 완료!"
 echo ""
 echo "📋 다음 단계:"
-echo "1. 새 터미널 세션을 시작하거나 'newgrp docker' 실행"
-echo "2. 프로젝트 소스코드를 클론"
-echo "3. SSL 인증서 설정 실행"
-echo "4. Docker Compose로 애플리케이션 시작"
+echo "1. 프로젝트 소스코드를 클론: git clone [repo-url]"
+echo "2. 프로젝트 디렉토리로 이동: cd backend"
+echo "3. SSL 인증서 발급: sudo certbot certonly --standalone -d yonsei-sketch.kro.kr"
+echo "4. SSL 인증서를 Docker 볼륨 위치로 복사:"
+echo "   sudo cp -r /etc/letsencrypt/* ./ssl/"
+echo "   sudo chmod -R 755 ./ssl"
+echo "5. Docker Compose로 애플리케이션 시작: docker-compose up -d --build"
+echo "6. 테스트: curl https://yonsei-sketch.kro.kr/api"
 echo ""
-echo "🔑 MySQL 접속 정보:"
-echo "  - 호스트: localhost"
-echo "  - 포트: 3306"
-echo "  - 데이터베이스: sketch_app"
-echo "  - 사용자: admin"
-echo "  - 비밀번호: 1234" 
+echo "🔧 H2 데이터베이스 정보:"
+echo "  - 타입: 인메모리 데이터베이스"
+echo "  - 콘솔 접속: https://yonsei-sketch.kro.kr/h2-console"
+echo "  - JDBC URL: jdbc:h2:mem:sketch_app"
+echo "  - 사용자: sa"
+echo "  - 비밀번호: (공백)"
+echo ""
+echo "⚠️  주의사항:"
+echo "  - 애플리케이션 재시작 시 모든 데이터가 삭제됩니다 (인메모리 특성)"
+echo "  - 로그아웃 후 다시 로그인하여 docker 그룹 권한을 적용하세요" 
