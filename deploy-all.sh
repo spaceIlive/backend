@@ -31,6 +31,7 @@ sudo systemctl enable nginx
 
 # 2. 애플리케이션 빌드
 echo "🔨 애플리케이션 빌드 중..."
+chmod +x ./mvnw
 ./mvnw clean package -DskipTests
 
 # 3. Nginx 설정
