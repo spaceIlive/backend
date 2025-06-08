@@ -1,0 +1,22 @@
+[Unit]
+Description=Sketch App Spring Boot Application
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/backend
+ExecStart=/usr/bin/java -jar /home/ubuntu/backend/target/backend-0.0.1-SNAPSHOT.jar
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sketch-app
+
+# 환경 변수
+Environment=SPRING_PROFILES_ACTIVE=prod
+Environment=JAVA_OPTS="-Xms512m -Xmx1024m"
+
+[Install]
+WantedBy=multi-user.target 
