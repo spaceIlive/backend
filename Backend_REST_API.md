@@ -178,7 +178,11 @@
       "guess": "고양이",
       "confidence": 85,
       "otherPossibilities": ["강아지", "토끼", "햄스터"],
-      "reason": "둥근 귀와 수염이 보이며, 네 다리로 앉아있는 모습이 고양이와 매우 유사합니다."
+      "reason": "둥근 귀와 수염이 보이며, 네 다리로 앉아있는 모습이 고양이와 매우 유사합니다.",
+      "drawingQualityScore": 78,
+      "creativityScore": 65,
+      "overallScore": 75,
+      "overallReason": "기본적인 고양이의 특징은 잘 표현되었으나, 세부적인 털의 질감이나 음영 표현이 부족합니다."
     }
     ```
   - 실패 (400 Bad Request):
@@ -189,7 +193,11 @@
       "guess": null,
       "confidence": null,
       "otherPossibilities": null,
-      "reason": null
+      "reason": null,
+      "drawingQualityScore": null,
+      "creativityScore": null,
+      "overallScore": null,
+      "overallReason": null
     }
     ```
   - 실패 (500 Internal Server Error):
@@ -200,7 +208,11 @@
       "guess": null,
       "confidence": null,
       "otherPossibilities": null,
-      "reason": null
+      "reason": null,
+      "drawingQualityScore": null,
+      "creativityScore": null,
+      "overallScore": null,
+      "overallReason": null
     }
     ```
 
@@ -211,6 +223,10 @@
 - `confidence`: 확신도 1-100% (integer)
 - `otherPossibilities`: 다른 가능성들 (string array)
 - `reason`: 추측 이유/설명 (string)
+- `drawingQualityScore`: 그림 품질 점수 0-100점 (integer) - 선의 정확성, 비례, 완성도, 세밀함 등
+- `creativityScore`: 창의성 점수 0-100점 (integer) - 독창적 표현, 아이디어, 색상/구성의 참신함 등
+- `overallScore`: 전체 평가 점수 0-100점 (integer) - 품질과 창의성을 종합한 전반적 평가
+- `overallReason`: 종합 평가 이유 (string) - 전체 점수에 대한 상세 설명
 
 ### 폴더 관리 (/api/folders)
 
@@ -340,7 +356,11 @@ image: [PNG 파일 바이너리]
   "guess": "나무",
   "confidence": 92,
   "otherPossibilities": ["꽃", "식물", "풀"],
-  "reason": "직선적인 줄기와 위쪽의 둥근 형태가 나무의 특징과 일치합니다."
+  "reason": "직선적인 줄기와 위쪽의 둥근 형태가 나무의 특징과 일치합니다.",
+  "drawingQualityScore": 85,
+  "creativityScore": 70,
+  "overallScore": 80,
+  "overallReason": "나무의 기본 구조는 명확하게 표현되었으나, 잎사귀나 나무껍질 등의 세부 표현이 아쉽습니다."
 }
 ```
 
