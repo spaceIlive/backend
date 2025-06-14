@@ -39,7 +39,14 @@ logging:
 
 # CORS 설정 (로컬 서버 + 외부 접속용)
 cors:
-  allowed-origins: ${ALLOWED_ORIGINS:https://yonsei-sketch.kro.kr,http://yonsei-sketch.kro.kr,http://localhost:3001,http://192.168.50.78:3001}
+  allowed-origins: ${ALLOWED_ORIGINS:https://yonsei-sketch.kro.kr,http://yonsei-sketch.kro.kr,http://localhost:3001}
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: "*"
   allow-credentials: true
+
+# Claude API 설정
+claude:
+  api:
+    url: https://api.anthropic.com/v1/messages
+    key: ${CLAUDE_API_KEY:your-claude-api-key-here}
+    model: claude-3-5-sonnet-20241022
