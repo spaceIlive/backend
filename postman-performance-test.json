@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "Sketch App Performance Test",
+    "description": "폴더 구조 조회 성능 테스트",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"  
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "폴더 구조 조회 성능 테스트",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// 1-50 사이의 랜덤한 userId 생성",
+              "const randomUserId = Math.floor(Math.random() * 50) + 1;",
+              "pm.environment.set('userId', randomUserId);",
+              "",
+              "console.log('테스트할 userId:', randomUserId);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// 응답 시간 체크",
+              "pm.test('응답 시간이 1초 이하', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "// 상태 코드 체크",
+              "pm.test('상태 코드가 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// 응답 구조 체크",
+              "pm.test('응답 데이터 구조 확인', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('folder_id');",
+              "    pm.expect(responseJson).to.have.property('name');",
+              "    pm.expect(responseJson).to.have.property('user_id');",
+              "});",
+              "",
+              "// 로그 출력",
+              "console.log('userId:', pm.environment.get('userId'));",
+              "console.log('응답 시간:', pm.response.responseTime + 'ms');",
+              "console.log('상태 코드:', pm.response.status);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/folders/structure/{{userId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "folders",
+            "structure",
+            "{{userId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "스케치 생성 성능 테스트",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// 랜덤 데이터 생성",
+              "const randomUserId = Math.floor(Math.random() * 50) + 1;",
+              "const randomTitle = 'Performance Test ' + Math.floor(Math.random() * 1000);",
+              "const randomContent = 'test_sketch_data_' + Date.now();",
+              "",
+              "pm.environment.set('userId', randomUserId);",
+              "pm.environment.set('title', randomTitle);",
+              "pm.environment.set('content', randomContent);",
+              "pm.environment.set('folderId', randomUserId); // 루트 폴더 ID와 같음",
+              "",
+              "console.log('테스트 데이터:', {",
+              "    userId: randomUserId,",
+              "    title: randomTitle,", 
+              "    folderId: randomUserId",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// 응답 시간 체크 (2초 이하)",
+              "pm.test('응답 시간이 2초 이하', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});",
+              "",
+              "// 상태 코드 체크",
+              "pm.test('상태 코드가 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// 응답 구조 체크",
+              "pm.test('스케치 생성 응답 구조 확인', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('drawing_id');",
+              "    pm.expect(responseJson).to.have.property('title');",
+              "    pm.expect(responseJson).to.have.property('content');",
+              "    pm.expect(responseJson).to.have.property('folder_id');",
+              "});",
+              "",
+              "// 로그 출력",
+              "console.log('생성된 스케치 ID:', pm.response.json().drawing_id);",
+              "console.log('응답 시간:', pm.response.responseTime + 'ms');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "title",
+              "value": "{{title}}",
+              "type": "text"
+            },
+            {
+              "key": "content", 
+              "value": "{{content}}",
+              "type": "text"
+            },
+            {
+              "key": "folderId",
+              "value": "{{folderId}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/drawings",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "drawings"
+          ]
+        }
+      }
+    }
+  ]
+} 
