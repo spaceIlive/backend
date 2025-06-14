@@ -63,7 +63,8 @@ public class ClaudeService {
     private Map<String, Object> createRequestBody(String base64Image, String contentType) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", model);
-        requestBody.put("max_tokens", 1000);
+        requestBody.put("max_tokens", 2000);  // 더 자세한 분석을 위해 토큰 수 증가
+        requestBody.put("temperature", 0.3);  // 창의성보다 정확성을 위해 낮은 온도 설정
         
         // 메시지 구성
         Map<String, Object> message = new HashMap<>();
@@ -72,7 +73,7 @@ public class ClaudeService {
         // 컨텐츠 구성 (텍스트 + 이미지)
         Map<String, Object> textContent = new HashMap<>();
         textContent.put("type", "text");
-        textContent.put("text", "이 그림을 분석해서 어떤 유명한 그림이나 작품과 닮았는지 알려주세요. 답변은 간단하게 작품명만 말해주세요.");
+        textContent.put("text", createAnalysisPrompt());
         
         Map<String, Object> imageContent = new HashMap<>();
         imageContent.put("type", "image");
@@ -88,6 +89,30 @@ public class ClaudeService {
         requestBody.put("messages", List.of(message));
         
         return requestBody;
+    }
+
+    private String createAnalysisPrompt() {
+        return """
+        **중요: 반드시 아래 형식으로만 응답하세요! 다른 말은 하지 마세요!**
+        
+        이 이미지에서 보이는 것이 무엇인지 맞춰주세요.
+        스케치든 사진이든 상관없이, 무엇을 나타내는지 추측해주세요.
+        
+        **형식을 정확히 지켜서 응답하세요:**
+        
+        - 추측: [답]
+        - 확신도: [숫자]%
+        - 다른 가능성: [답1, 답2, 답3]
+        - 이유: [간단한 설명]
+        
+        **예시:**
+        - 추측: 사과
+        - 확신도: 90%
+        - 다른 가능성: 토마토, 체리
+        - 이유: 빨간색 둥근 과일 모양입니다
+        
+        **절대 다른 형식으로 답변하지 마세요. 오직 위 형식만 사용하세요.**
+        """;
     }
 
     private String extractResultFromResponse(String response) {
